@@ -21,20 +21,21 @@ public class CountryList {
         countries.add(country);
     }
 
-    public void readCountryFromFile (String input) throws FileNotFoundException {
+    public void readCountryFromFile (String input) throws Exception {
 
         int lineNumber = 0;
         String nextLine;
         String[] items;
         Country newCountry;
+        List<String> errorMessages = new ArrayList<>();
 
         String code;
         String name;
-        String vatHighString;
-        String vatLowString;
-        String newVatHighString;
-        String newVatLowString;
-        double vatHigh;
+        String vatFullText;
+        String vatLowText;
+        String newVatFullText;
+        String newVatLowText;
+        double vatFull;
         double vatLow;
         boolean specialVat;
 
@@ -42,24 +43,32 @@ public class CountryList {
             while (scanner.hasNextLine()) {
                 lineNumber++;
                 nextLine = scanner.nextLine();
-                items = nextLine.split(Settings.delimiter());
-                code = items[0];
-                name = items[1];
-                vatHighString = items[2];
-                vatLowString = items[3];
-                if (vatHighString.contains(",")) {
-                    newVatHighString = vatHighString.replace(",", ".");
-                } else newVatHighString = vatHighString;
-                if (vatLowString.contains(",")) {
-                    newVatLowString = vatLowString.replace(",", ".");
-                } else newVatLowString = vatLowString;
-                specialVat = Boolean.parseBoolean(items[4]);
-                vatHigh = Double.parseDouble(newVatHighString);
-                vatLow = Double.parseDouble(newVatLowString);
-                newCountry = new Country(code, name, vatHigh, vatLow, specialVat);
-                countries.add(newCountry);
+                try {
+                    items = nextLine.split(Settings.delimiter());
+                    code = items[0];
+                    name = items[1];
+                    vatFullText = items[2];
+                    vatLowText = items[3];
+                    if (vatFullText.contains(",")) {
+                        newVatFullText = vatFullText.replace(",", ".");
+                    } else newVatFullText = vatFullText;
+                    if (vatLowText.contains(",")) {
+                        newVatLowText = vatLowText.replace(",", ".");
+                    } else newVatLowText = vatLowText;
+                    specialVat = Boolean.parseBoolean(items[4]);
+                    vatFull = Double.parseDouble(newVatFullText);
+                    vatLow = Double.parseDouble(newVatLowText);
+                    newCountry = new Country(code, name, vatFull, vatLow, specialVat);
+                    countries.add(newCountry);
+                } catch (NumberFormatException e) {
+                    errorMessages.add("Nesprávný formát čísla na řádku " + lineNumber + ": " + e.getLocalizedMessage());
+                } catch (Exception e) {
+                    errorMessages.add("Jiná chyba na řádku " + lineNumber + ": " + e.getLocalizedMessage());
+                }
             }
-
+            if (errorMessages.size() > 0) {
+                throw new MyException(errorMessages);
+            }
         }
 
     }

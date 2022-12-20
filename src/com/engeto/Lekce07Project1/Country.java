@@ -4,14 +4,14 @@ public class Country implements Comparable<Country>{
 
     private String code;
     private String name;
-    private double vatHigh;
+    private double vatFull;
     private double vatLow;
     private boolean specialVat;
 
-    public Country(String code, String name, double vatHigh, double vatLow, boolean specialVat) {
+    public Country(String code, String name, double vatFull, double vatLow, boolean specialVat) {
         this.code = code;
         this.name = name;
-        this.vatHigh = vatHigh;
+        this.vatFull = vatFull;
         this.vatLow = vatLow;
         this.specialVat = specialVat;
     }
@@ -32,12 +32,12 @@ public class Country implements Comparable<Country>{
         this.name = name;
     }
 
-    public Double getVatHigh() {
-        return vatHigh;
+    public Double getVatFull() {
+        return vatFull;
     }
 
-    public void setVatHigh(double vatHigh) {
-        this.vatHigh = vatHigh;
+    public void setVatFull(double vatFull) {
+        this.vatFull = vatFull;
     }
 
     public Double getVatLow() {
@@ -57,7 +57,7 @@ public class Country implements Comparable<Country>{
     }
 
     public String getDescription() {
-        return getName() + " (" + getCode() + "): " + getVatHigh() + " %";
+        return getName() + " (" + getCode() + "): " + getVatFull() + " %";
     }
 
     @Override
