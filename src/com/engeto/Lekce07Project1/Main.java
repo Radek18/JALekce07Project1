@@ -10,7 +10,7 @@ public class Main {
         CountryList countryList = new CountryList();
 
         try {
-            countryList.readCountryFromFile(Settings.input());
+            countryList.readCountryFromFile(Support.input());
         } catch (FileNotFoundException e) {
             System.err.println("Chyba při čtení souboru: " + e.getLocalizedMessage());
         } catch (MyException e) {
@@ -27,35 +27,32 @@ public class Main {
         System.out.println();
 
         System.out.println("Zadejte sazbu daně jako limit a stiskněte ENTER:");
-        Settings.setLimit();
+        Support.setLimitAndOutput();
 
-        CountryList countriesAboveLimit = new CountryList();
-        CountryList countriesToLimit = new CountryList();
+        List<Country> countriesAboveLimit = new ArrayList<>();
+        List<Country> countriesToLimit = new ArrayList<>();
 
         for (Country country : countryList.getCountries()) {
-            if (country.getVatFull() > Settings.getLimit() && ! country.isSpecialVat()) {
-                countriesAboveLimit.addCountry(country);
-            } else countriesToLimit.addCountry(country);
+            if (country.getVatFull() > Support.getLimit() && ! country.isSpecialVat()) {
+                countriesAboveLimit.add(country);
+            } else countriesToLimit.add(country);
         }
 
-        List<Country> copyOfCountriesAboveLimit = new ArrayList<>(countriesAboveLimit.getCountries());
-        List<Country> copyOfCountriesToLimit = new ArrayList<>(countriesToLimit.getCountries());
+        countriesAboveLimit.sort(new CountryVatFullComparator());
+        Collections.sort(countriesToLimit);
 
-        copyOfCountriesAboveLimit.sort(new CountryVatFullComparator());
-        Collections.sort(copyOfCountriesToLimit);
+        System.out.println("Výpis států se základní sazbou daně nad " + Support.getLimit() + " % seřazen podle základní sazby daně sestupně:");
 
-        System.out.println("Výpis států se základní sazbou daně nad " + Settings.getLimit() + " % seřazen podle základní sazby daně sestupně:");
-
-        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(Settings.output())))) {
-            for (Country country : copyOfCountriesAboveLimit) {
+        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(Support.output())))) {
+            for (Country country : countriesAboveLimit) {
                 System.out.println(country.getDescription());
                 writer.println(country.getDescription());
             }
             System.out.println("====================");
             writer.println("====================");
-            System.out.print("Sazba VAT " + Settings.getLimit() + " % nebo nižší nebo používají speciální sazbu: ");
-            writer.print("Sazba VAT " + Settings.getLimit() + " % nebo nižší nebo používají speciální sazbu: ");
-            for (Country country : copyOfCountriesToLimit) {
+            System.out.print("Sazba VAT " + Support.getLimit() + " % nebo nižší nebo používají speciální sazbu: ");
+            writer.print("Sazba VAT " + Support.getLimit() + " % nebo nižší nebo používají speciální sazbu: ");
+            for (Country country : countriesToLimit) {
                 System.out.print(country.getCode() + ", ");
                 writer.print(country.getCode() + ", ");
             }

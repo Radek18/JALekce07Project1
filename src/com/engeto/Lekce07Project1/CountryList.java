@@ -44,7 +44,7 @@ public class CountryList {
                 lineNumber++;
                 nextLine = scanner.nextLine();
                 try {
-                    items = nextLine.split(Settings.delimiter());
+                    items = nextLine.split(Support.delimiter());
                     code = items[0];
                     name = items[1];
                     vatFullText = items[2];
