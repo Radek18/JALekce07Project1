@@ -33,8 +33,6 @@ public class CountryList {
         String name;
         String vatFullText;
         String vatLowText;
-        String newVatFullText;
-        String newVatLowText;
         double vatFull;
         double vatLow;
         boolean specialVat;
@@ -49,15 +47,9 @@ public class CountryList {
                     name = items[1];
                     vatFullText = items[2];
                     vatLowText = items[3];
-                    if (vatFullText.contains(",")) {
-                        newVatFullText = vatFullText.replace(",", ".");
-                    } else newVatFullText = vatFullText;
-                    if (vatLowText.contains(",")) {
-                        newVatLowText = vatLowText.replace(",", ".");
-                    } else newVatLowText = vatLowText;
                     specialVat = Boolean.parseBoolean(items[4]);
-                    vatFull = Double.parseDouble(newVatFullText);
-                    vatLow = Double.parseDouble(newVatLowText);
+                    vatFull = parseDoubleWithReplace(vatFullText);
+                    vatLow = parseDoubleWithReplace(vatLowText);
                     newCountry = new Country(code, name, vatFull, vatLow, specialVat);
                     countries.add(newCountry);
                 } catch (NumberFormatException e) {
@@ -71,6 +63,13 @@ public class CountryList {
             }
         }
 
+    }
+
+    public double parseDoubleWithReplace(String text) {
+        double number;
+        if (text.contains(",")) text = text.replace(",", ".");
+        number = Double.parseDouble(text);
+        return number;
     }
 
 }
