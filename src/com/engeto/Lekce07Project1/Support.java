@@ -41,4 +41,11 @@ public class Support {
         return limit;
     }
 
+    public static double parseDoubleWithReplace(String text) {
+        double number;
+        if (text.contains(",")) text = text.replace(",", ".");
+        number = Double.parseDouble(text);
+        return number;
+    }
+
 }

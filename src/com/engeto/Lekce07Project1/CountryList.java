@@ -48,8 +48,8 @@ public class CountryList {
                     vatFullText = items[2];
                     vatLowText = items[3];
                     specialVat = Boolean.parseBoolean(items[4]);
-                    vatFull = parseDoubleWithReplace(vatFullText);
-                    vatLow = parseDoubleWithReplace(vatLowText);
+                    vatFull = Support.parseDoubleWithReplace(vatFullText);
+                    vatLow = Support.parseDoubleWithReplace(vatLowText);
                     newCountry = new Country(code, name, vatFull, vatLow, specialVat);
                     countries.add(newCountry);
                 } catch (NumberFormatException e) {
@@ -63,13 +63,6 @@ public class CountryList {
             }
         }
 
-    }
-
-    public double parseDoubleWithReplace(String text) {
-        double number;
-        if (text.contains(",")) text = text.replace(",", ".");
-        number = Double.parseDouble(text);
-        return number;
     }
 
 }
